@@ -1,23 +1,24 @@
-import fastify ,{ FastifyInstance } from "fastify";
+import fastify, { FastifyInstance } from "fastify";
 import { registerHealthRoute } from "./infrastructure/http/routes/health.routes.js";
+import { AppConfig, loadConfig } from "./infrastructure/config/env.js";
 
-export interface AppConfig {
-    nodeEnv: 'development' | 'production' | 'test';
-    host: string;
-    port: number;
-    logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
-    brasilApiBaseUrl: string;
-    providerTimeoutMs: number;
-    providerMaxResponseBytes: number;
-    cacheTtlSeconds: number;
-    cacheMaxItems: number;
-    rateLimitMax: number;
-    rateLimitWindowSeconds: number;
-    trustProxy: boolean;
+interface BuildAppOptions {
+  config?: AppConfig;
 }
 
-export async function buildApp(): Promise<FastifyInstance> {
-    const app = fastify({logger: false});
-    await registerHealthRoute(app);
-    return app;
+export async function buildApp(
+  options: BuildAppOptions = {},
+): Promise<FastifyInstance> {
+  const config = options.config ?? loadConfig(process.env);
+
+  const app = fastify({
+    logger: false,
+    trustProxy: config.trustProxy,
+  });
+
+  await registerHealthRoute(app);
+
+  return app;
 }
+
+await buildApp();
