@@ -27,6 +27,9 @@
   "author": "Evilis Glenio",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "bugs": {
     "url": "https://github.com/EvilisGlenio/Company-Lookup-API/issues"
   },

@@ -15,4 +15,20 @@ describe("loadConfig", () => {
   it("rejects invalid numeric values", () => {
     expect(() => loadConfig({ PORT: "abc" })).toThrow("Invalid environment");
   });
+
+  it("requires an HTTPS provider URL in production", () => {
+    expect(() =>
+      loadConfig({
+        NODE_ENV: "production",
+        BRASIL_API_BASE_URL: "http://brasilapi.com.br/api",
+      }),
+    ).toThrow("Invalid environment");
+  });
+
+  it("accepts only 'true' or 'false' for TRUST_PROXY", () => {
+    expect(loadConfig({ TRUST_PROXY: "true" }).trustProxy).toBe(true);
+    expect(() => loadConfig({ TRUST_PROXY: "yes" })).toThrow(
+      "Invalid environment",
+    );
+  });
 });

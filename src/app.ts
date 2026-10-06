@@ -20,5 +20,3 @@ export async function buildApp(
 
   return app;
 }
-
-await buildApp();
