@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isValidTaxId } from "../../domain/tax-id.js";
 
 // Contrato externo da BrasilAPI (GET /cnpj/v1/:cnpj). Valida somente os campos
 // consumidos pelo mapeador; campos extras do provedor são tolerados e ignorados.
@@ -13,7 +14,7 @@ const brasilApiActivitySchema = z.object({
 });
 
 export const brasilApiCompanySchema = z.looseObject({
-  cnpj: z.string().min(1),
+  cnpj: z.string().refine(isValidTaxId),
   razao_social: z.string().trim().min(1),
   nome_fantasia: text,
   situacao_cadastral: z.number().int().nullish(),

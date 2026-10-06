@@ -49,6 +49,14 @@ describe("brasilApiCompanySchema", () => {
     },
   );
 
+  it("rejeita CNPJ inválido vindo do provedor", () => {
+    const result = brasilApiCompanySchema.safeParse({
+      ...validBrasilApiCompany,
+      cnpj: "11222333000180",
+    });
+    expect(result.success).toBe(false);
+  });
+
   it("rejeita CNAE secundário com tipos errados", () => {
     const result = brasilApiCompanySchema.safeParse({
       ...validBrasilApiCompany,
